@@ -22,7 +22,14 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
-var app = express()
+var app = express();
+var router = express.Router();
+var goodsData = require('./../mock/goods.json');
+router.get('/goods', (req, res, next) => {
+  res.json(goodsData);
+});
+app.use(router);
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -31,7 +38,7 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
 })
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: () => {},
+  log: () => { },
   heartbeat: 2000
 })
 // force page reload when html-webpack-plugin template changes
