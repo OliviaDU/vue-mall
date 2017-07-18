@@ -19,9 +19,9 @@ db.on('disconnected', () => {
 });
 
 router.get('/', (req, res, next) => {
-    let page = Number(req.param('page')),//当前所在页数
-        pageSize = Number(req.param('pageSize')),//每页的条数
-        sort = Number(req.param('sort')),//排序方式
+    let page = Number(req.query.page),//当前所在页数
+        pageSize = Number(req.query.pageSize),//每页的条数
+        sort = Number(req.query.sort),//排序方式
         skip = Number((page - 1) * pageSize);//查询数据时，跳过前面页数的数据
 
     let params = {};
