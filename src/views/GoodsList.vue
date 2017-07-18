@@ -37,12 +37,12 @@
                                 <li v-for="goods in goodsList" :key="goods.productId">
                                     <div class="pic">
                                         <a href="#">
-                                            <img v-lazy="'/static/'+goods.prodcutImg" alt="">
+                                            <img v-lazy="'/static/'+goods.productImage" alt="">
                                         </a>
                                     </div>
                                     <div class="main">
                                         <div class="name">{{goods.productName}}</div>
-                                        <div class="price">{{goods.prodcutPrice}}</div>
+                                        <div class="price">{{goods.salePrice}}</div>
                                         <div class="btn-area">
                                             <a href="javascript:;" class="btn btn--m">加入购物车</a>
                                         </div>
@@ -95,14 +95,16 @@ export default {
         }
     },
     mounted() {
-        this.getGoodsList();
+        axios.get('/goods').then((res) => {
+            let data = res.data;
+            if (data.status == '0') {
+                this.goodsList = data.result.list;
+            }else{
+                 this.goodsList = [];
+            }
+        })
     },
     methods: {
-        getGoodsList() {
-            axios.get('/goods').then((res) => {
-                this.goodsList = res.data.result;
-            })
-        },
         showFilterPop() {
             this.filterBy = true;
             this.overLayFlag = true;
