@@ -61,6 +61,9 @@
                                 </li>
                             </ul>
                         </div>
+                        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" class="load-more"> 
+                            加载中...
+                        </div>
                     </div>
                     <!-- 商品展示区 end -->
     
@@ -113,7 +116,8 @@ export default {
             overLayFlag: false,
             sortFlag: true,
             page: 1,
-            pageSize: 8
+            pageSize: 8,
+            busy: true
         }
     },
     mounted() {
@@ -132,7 +136,8 @@ export default {
             this.filterBy = false;
             this.overLayFlag = false;
         },
-        getGoodsList() {
+        //flag代表分页是否需要累加
+        getGoodsList(flag) {
             let param = {
                 page: this.page,
                 pageSize: this.pageSize,
@@ -144,7 +149,20 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if (data.status == '0') {
-                    this.goodsList = data.result.list;
+                    if (flag) {
+                        this.goodsList = this.goodsList.concat(data.result.list);
+
+                        //如果已经加载完所有数据
+                        if (data.result.count == 0) {
+                            this.busy = true;
+                        }else{
+                            this.busy = false;
+                        }
+
+                    } else {
+                        this.goodsList = data.result.list;
+                        this.busy = false;
+                    }
                 } else {
                     this.goodsList = [];
                 }
@@ -154,7 +172,16 @@ export default {
             this.sortFlag = !this.sortFlag;
             this.page = 1;
             this.getGoodsList();
+        },
+        loadMore: function () {
+            this.busy = true;
+
+            setTimeout(() => {
+                this.page++;
+                this.getGoodsList(true);
+            }, 500);
         }
+
     }
 }
 </script>
