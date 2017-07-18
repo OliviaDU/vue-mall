@@ -1,23 +1,33 @@
 <template>
     <div>
+        <!-- 导航头部  -->
         <nav-header></nav-header>
+    
+        <!-- 面包屑导航 start -->
         <nav-bread>
             <span>Goods</span>
         </nav-bread>
+        <!-- 面包屑导航 end -->
+    
         <div class="accessory-result-page accessory-page">
             <div class="container">
+    
+                <!-- 排序工具栏 start -->
                 <div class="filter-nav">
                     <span class="sortby">Sort by:</span>
                     <a href="javascript:void(0)" class="default cur">Default</a>
-                    <a href="javascript:void(0)" class="price">Price
+                    <a @click="sortGoods" href="javascript:void(0)" class="price">Price
                         <svg class="icon icon-arrow-short">
                             <use xlink:href="#icon-arrow-short"></use>
                         </svg>
                     </a>
                     <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
                 </div>
+                <!-- 排序工具栏 end -->
+    
                 <div class="accessory-result">
-                    <!-- filter -->
+    
+                    <!-- 响应式价格选择栏 start -->
                     <div class="filter stopPop" id="filter" :class="{'filterby-show':filterBy}">
                         <dl class="filter-price">
                             <dt>Price:</dt>
@@ -29,8 +39,9 @@
                             </dd>
                         </dl>
                     </div>
+                    <!-- 响应式价格选择栏 end -->
     
-                    <!-- search result accessories list -->
+                    <!-- 商品展示区 start -->
                     <div class="accessory-list-wrap">
                         <div class="accessory-list col-4">
                             <ul>
@@ -51,10 +62,16 @@
                             </ul>
                         </div>
                     </div>
+                    <!-- 商品展示区 end -->
+    
                 </div>
             </div>
         </div>
+    
+        <!-- 遮罩层 -->
         <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+    
+        <!-- 页脚 -->
         <nav-footer></nav-footer>
     </div>
 </template>
@@ -62,10 +79,12 @@
 import '../assets/css/base.css'
 import '../assets/css/login.css'
 import '../assets/css/product.css'
+
 import NavHeader from '../components/NavHeader'
 import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
 import axios from 'axios'
+
 export default {
     components: {
         NavHeader,
@@ -91,18 +110,14 @@ export default {
             ],
             priceChecked: 'all',
             filterBy: false,
-            overLayFlag: false
+            overLayFlag: false,
+            sortFlag: true,
+            page: 1,
+            pageSize: 8
         }
     },
     mounted() {
-        axios.get('/goods').then((res) => {
-            let data = res.data;
-            if (data.status == '0') {
-                this.goodsList = data.result.list;
-            }else{
-                 this.goodsList = [];
-            }
-        })
+        this.getGoodsList();
     },
     methods: {
         showFilterPop() {
@@ -116,6 +131,29 @@ export default {
         closePop() {
             this.filterBy = false;
             this.overLayFlag = false;
+        },
+        getGoodsList() {
+            let param = {
+                page: this.page,
+                pageSize: this.pageSize,
+                sort: this.sortFlag ? 1 : -1
+            };
+
+            axios.get('/goods', {
+                params: param
+            }).then((res) => {
+                let data = res.data;
+                if (data.status == '0') {
+                    this.goodsList = data.result.list;
+                } else {
+                    this.goodsList = [];
+                }
+            });
+        },
+        sortGoods() {
+            this.sortFlag = !this.sortFlag;
+            this.page = 1;
+            this.getGoodsList();
         }
     }
 }
