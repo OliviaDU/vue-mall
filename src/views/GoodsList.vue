@@ -61,7 +61,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" class="load-more"> 
+                        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" class="load-more">
                             加载中...
                         </div>
                     </div>
@@ -99,16 +99,20 @@ export default {
             goodsList: [],
             priceFilter: [
                 {
-                    startPrice: '0.00',
-                    endPrice: '500.00'
+                    startPrice: '0',
+                    endPrice: '100'
                 },
                 {
-                    startPrice: '500.00',
-                    endPrice: '1000.00'
+                    startPrice: '100',
+                    endPrice: '500'
                 },
                 {
-                    startPrice: '1000.00',
-                    endPrice: '1500.00'
+                    startPrice: '500',
+                    endPrice: '1000'
+                },
+                {
+                    startPrice: '1000',
+                    endPrice: '1500'
                 }
             ],
             priceChecked: 'all',
@@ -128,20 +132,20 @@ export default {
             this.filterBy = true;
             this.overLayFlag = true;
         },
-        setPriceFilter(index) {
-            this.priceChecked = index;
-            this.closePop();
-        },
         closePop() {
             this.filterBy = false;
             this.overLayFlag = false;
         },
+
         //flag代表分页是否需要累加
         getGoodsList(flag) {
+            
+            //请求传递的参数
             let param = {
                 page: this.page,
                 pageSize: this.pageSize,
-                sort: this.sortFlag ? 1 : -1
+                sort: this.sortFlag ? 1 : -1,
+                priceLevel:this.priceChecked
             };
 
             axios.get('/goods', {
@@ -155,7 +159,7 @@ export default {
                         //如果已经加载完所有数据
                         if (data.result.count == 0) {
                             this.busy = true;
-                        }else{
+                        } else {
                             this.busy = false;
                         }
 
@@ -172,6 +176,12 @@ export default {
             this.sortFlag = !this.sortFlag;
             this.page = 1;
             this.getGoodsList();
+        },
+        setPriceFilter(index) {
+            this.priceChecked = index;
+            this.page = 1;
+            this.getGoodsList();
+            this.closePop();
         },
         loadMore: function () {
             this.busy = true;
