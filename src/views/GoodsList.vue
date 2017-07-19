@@ -62,7 +62,7 @@
                             </ul>
                         </div>
                         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" class="load-more">
-                            加载中...
+                            <img src="../assets/loading-spinning-bubbles.svg" v-show="loading">
                         </div>
                     </div>
                     <!-- 商品展示区 end -->
@@ -96,6 +96,14 @@ export default {
     },
     data() {
         return {
+            priceChecked: 'all',
+            filterBy: false,
+            overLayFlag: false,
+            sortFlag: true,
+            page: 1,
+            pageSize: 8,
+            busy: true,
+            loading: false,
             goodsList: [],
             priceFilter: [
                 {
@@ -114,14 +122,7 @@ export default {
                     startPrice: '1000',
                     endPrice: '1500'
                 }
-            ],
-            priceChecked: 'all',
-            filterBy: false,
-            overLayFlag: false,
-            sortFlag: true,
-            page: 1,
-            pageSize: 8,
-            busy: true
+            ]
         }
     },
     mounted() {
@@ -139,18 +140,19 @@ export default {
 
         //flag代表分页是否需要累加
         getGoodsList(flag) {
-            
+            this.loading = true;
             //请求传递的参数
             let param = {
                 page: this.page,
                 pageSize: this.pageSize,
                 sort: this.sortFlag ? 1 : -1,
-                priceLevel:this.priceChecked
+                priceLevel: this.priceChecked
             };
 
             axios.get('/goods', {
                 params: param
             }).then((res) => {
+                this.loading = false;
                 let data = res.data;
                 if (data.status == '0') {
                     if (flag) {
