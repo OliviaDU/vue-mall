@@ -7,6 +7,9 @@ router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
+/**
+ * 登录
+ */
 router.post('/login', (req, res, next) => {
   let param = {
     userName: req.body.userName,
@@ -22,10 +25,6 @@ router.post('/login', (req, res, next) => {
           path: '/',
           maxAge: 1000 * 60 * 60
         });
-        res.cookie("userName", doc.userName, {
-          path: '/',
-          maxAge: 1000 * 60 * 60
-        });
         // req.session.user = doc;
 
         res.json({
@@ -35,7 +34,7 @@ router.post('/login', (req, res, next) => {
             userName: doc.userName
           }
         });
-      } 
+      }
       //如果不存在该用户
       else {
         res.json({
@@ -50,6 +49,21 @@ router.post('/login', (req, res, next) => {
         msg: err.message
       });
     });
+});
+
+/**
+ * 退出
+ */
+router.post('/logout', (req, res, next) => {
+  res.cookie('userId', '', {
+    path: '/',
+    maxAge: -1
+  });
+  res.json({
+    status: '0',
+    msg: '',
+    result: {}
+  });
 });
 
 module.exports = router;

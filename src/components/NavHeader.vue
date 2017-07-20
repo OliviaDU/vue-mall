@@ -18,8 +18,8 @@
                 <div class="navbar-menu-container">
                     <!--<a href="/" class="navbar-link">我的账户</a>-->
                     <span class="navbar-link" v-if="nickName">{{nickName}}</span>
-                    <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true"  v-if="!nickName">登录</a>
-                    <a href="javascript:void(0)" class="navbar-link" v-if="nickName">退出</a>
+                    <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">登录</a>
+                    <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logout">退出</a>
                     <div class="navbar-cart-container">
                         <span class="navbar-cart-count"></span>
                         <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -70,6 +70,56 @@
     
     </header>
 </template>
+
+<script>
+import './../assets/css/login.css'
+import axios from 'axios'
+
+export default {
+    data() {
+        return {
+            userName: '',
+            userPwd: '',
+            nickName: '',
+            errorTip: false,
+            emptyTip: false,
+            loginModalFlag: false
+        }
+    },
+    methods: {
+        login() {
+            if (!this.userName || !this.userPwd) {
+                this.errorTip = false;
+                this.emptyTip = true;
+                return;
+            }
+            axios.post('/users/login', {
+                userName: this.userName,
+                userPwd: this.userPwd
+            }).then((res) => {
+                this.emptyTip = false;
+
+                let data = res.data;
+                if (data.status === '0') {
+                    this.errorTip = false;
+                    this.loginModalFlag = false;
+                    this.nickName = res.data.result.userName;
+                } else {
+                    this.errorTip = true;
+                }
+            })
+        },
+        logout() {
+            axios.post('/users/logout').then((res) => {
+                let data = res.data;
+                if (data.status === '0') {
+                    this.nickName = '';
+                }
+            })
+        }
+    }
+}
+</script>
 
 <style>
 .header {
@@ -151,48 +201,5 @@ a {
     transform: scaleX(-1);
 }
 </style>
-
-<script>
-import './../assets/css/login.css'
-import axios from 'axios'
-
-export default {
-    data() {
-        return {
-            userName: '',
-            userPwd: '',
-            nickName: '',
-            errorTip: false,
-            emptyTip: false,
-            loginModalFlag: true
-        }
-    },
-    methods: {
-        login() {
-            if (!this.userName || !this.userPwd) {
-                this.errorTip = false;
-                this.emptyTip = true;
-                return;
-            }
-            axios.post('/users/login', {
-                userName: this.userName,
-                userPwd: this.userPwd
-            }).then((res) => {
-                this.emptyTip = false;
-
-                let data = res.data;
-                if (data.status === '0') {
-                    this.errorTip = false;
-                    this.loginModalFlag = false;
-                    this.nickName = res.data.result.userName;
-                } else {
-                    this.errorTip = true;
-                }
-            })
-        }
-    }
-}
-</script>
-
 
 
