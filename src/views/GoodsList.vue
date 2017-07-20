@@ -71,10 +71,10 @@
         </div>
     
         <!-- 模态框 start -->
-        <modal :modal-show="modalShow">
+        <modal :modal-show="modalShow" @close="closeModal">
             <p slot="message">请先登录，否则无法添加到购物车中！</p>
             <div slot="btnGroup">
-                <a class="btn btn--m" @click="modalShow=false">关闭</a>
+                <a class="btn btn--m" @click="closeModal">关闭</a>
             </div>
         </modal>
         <!-- 模态框 end -->
@@ -213,6 +213,9 @@ export default {
                         this.modalShow = true;
                     }
                 })
+        },
+        closeModal() {
+            this.modalShow = false;
         }
     }
 }
