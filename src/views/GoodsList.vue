@@ -70,14 +70,30 @@
             </div>
         </div>
     
-        <!-- 模态框 start -->
+        <!-- 提醒登录模态框 start -->
         <modal :modal-show="modalShow" @close="closeModal">
             <p slot="message">请先登录，否则无法添加到购物车中！</p>
             <div slot="btnGroup">
                 <a class="btn btn--m" @click="closeModal">关闭</a>
             </div>
         </modal>
-        <!-- 模态框 end -->
+        <!-- 提醒登录模态框 end -->
+    
+        <!-- 加入购物车成功模态框 start -->
+        <modal :modal-show="modalShowCart" @close="closeModal">
+            <p slot="message">
+                <svg class="icon icon-arrow-short" :class="{'sort-up':sortFlag}">
+                    <use xlink:href="#icon-status-ok"></use>
+                </svg>
+                <span>加入购物车成功！</span>
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" @click="closeModal">继续购物</a>
+                <!-- 相当于a标签，但是有to属性 -->
+                <router-link class="btn btn--m" to="/cart">查看购物车</router-link>
+            </div>
+        </modal>
+        <!-- 加入购物车成功模态框 end -->
     
         <!-- 页脚 -->
         <nav-footer></nav-footer>
@@ -113,6 +129,7 @@ export default {
             busy: true,
             loading: false,
             modalShow: false,
+            modalShowCart: false,
             goodsList: [],
             priceFilter: [
                 {
@@ -208,14 +225,17 @@ export default {
                 .post('/goods/addCart', { productId: productId })
                 .then((res) => {
                     if (res.data.status == '0') {
-                        alert('添加成功')
+                        //如果用户已登录
+                        this.modalShowCart = true;
                     } else {
+                        //如果用户未登录
                         this.modalShow = true;
                     }
                 })
         },
         closeModal() {
             this.modalShow = false;
+            this.modalShowCart = false;
         }
     }
 }
