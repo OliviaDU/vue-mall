@@ -46,7 +46,7 @@
         </div>
     
         <!-- 登录模态框 start -->
-        <div class="md-modal modal-msg md-modal-transition md-show" v-show="loginModalFlag">
+        <div class="md-modal modal-msg md-modal-transition" :class="{'md-show':loginModalFlag}">
             <div class="md-modal-inner">
                 <div class="md-top">
                     <div class="md-title">登录</div>

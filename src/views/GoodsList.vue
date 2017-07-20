@@ -14,9 +14,9 @@
     
                 <!-- 排序工具栏 start -->
                 <div class="filter-nav">
-                    <span class="sortby">Sort by:</span>
-                    <a href="javascript:void(0)" class="default cur">Default</a>
-                    <a @click="sortGoods" href="javascript:void(0)" class="price">Price
+                    <span class="sortby">排序:</span>
+                    <a href="javascript:void(0)" class="default" :class="{cur:!priceSortChecked}">默认</a>
+                    <a @click="sortGoods" href="javascript:void(0)" class="price" :class="{cur:priceSortChecked}">价格
                         <svg class="icon icon-arrow-short" :class="{'sort-up':sortFlag}">
                             <use xlink:href="#icon-arrow-short"></use>
                         </svg>
@@ -66,13 +66,18 @@
                         </div>
                     </div>
                     <!-- 商品展示区 end -->
-    
                 </div>
             </div>
         </div>
     
-        <!-- 遮罩层 -->
-        <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+        <!-- 模态框 start -->
+        <modal :modal-show="modalShow">
+            <p slot="message">请先登录，否则无法添加到购物车中！</p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" @click="modalShow=false">关闭</a>
+            </div>
+        </modal>
+        <!-- 模态框 end -->
     
         <!-- 页脚 -->
         <nav-footer></nav-footer>
@@ -86,17 +91,20 @@ import '../assets/css/product.css'
 import NavHeader from '../components/NavHeader'
 import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
+import Modal from '../components/Modal'
 import axios from 'axios'
 
 export default {
     components: {
         NavHeader,
         NavFooter,
-        NavBread
+        NavBread,
+        Modal
     },
     data() {
         return {
             priceChecked: 'all',
+            priceSortChecked: false,
             filterBy: false,
             overLayFlag: false,
             sortFlag: true,
@@ -104,6 +112,7 @@ export default {
             pageSize: 8,
             busy: true,
             loading: false,
+            modalShow: false,
             goodsList: [],
             priceFilter: [
                 {
@@ -176,6 +185,7 @@ export default {
         },
         sortGoods() {
             this.sortFlag = !this.sortFlag;
+            this.priceSortChecked = true;
             this.page = 1;
             this.getGoodsList();
         },
@@ -200,7 +210,7 @@ export default {
                     if (res.data.status == '0') {
                         alert('添加成功')
                     } else {
-                        alert('添加失败')
+                        this.modalShow = true;
                     }
                 })
         }
