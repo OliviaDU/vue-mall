@@ -5,7 +5,7 @@
     
         <!-- 面包屑导航 start -->
         <nav-bread>
-            <span>Goods</span>
+            <span>商品</span>
         </nav-bread>
         <!-- 面包屑导航 end -->
     
