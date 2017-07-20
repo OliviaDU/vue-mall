@@ -17,9 +17,9 @@
             <div class="navbar-right-container" style="display: flex;">
                 <div class="navbar-menu-container">
                     <!--<a href="/" class="navbar-link">我的账户</a>-->
-                    <span class="navbar-link"></span>
-                    <a href="javascript:void(0)" class="navbar-link">Login</a>
-                    <a href="javascript:void(0)" class="navbar-link">Logout</a>
+                    <span class="navbar-link" v-if="nickName">{{nickName}}</span>
+                    <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true"  v-if="!nickName">登录</a>
+                    <a href="javascript:void(0)" class="navbar-link" v-if="nickName">退出</a>
                     <div class="navbar-cart-container">
                         <span class="navbar-cart-count"></span>
                         <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -33,16 +33,17 @@
         </div>
     
         <!-- 登录模态框 start -->
-        <div class="md-modal modal-msg md-modal-transition">
+        <div class="md-modal modal-msg md-modal-transition md-show" v-show="loginModalFlag">
             <div class="md-modal-inner">
                 <div class="md-top">
                     <div class="md-title">登录</div>
-                    <button class="md-close">关闭</button>
+                    <button class="md-close" @click="loginModalFlag=false">关闭</button>
                 </div>
                 <div class="md-content">
                     <div class="confirm-tips">
                         <div class="error-wrap">
                             <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
+                            <span class="error error-show" v-show="emptyTip">用户名或者密码不能为空</span>
                         </div>
                         <ul>
                             <li class="regi_form_input">
@@ -56,7 +57,7 @@
                         </ul>
                     </div>
                     <div class="login-wrap">
-                        <a href="javascript:;" class="btn-login" @click="login">登 录</a>
+                        <a href="javascript:;" class="btn-login" @click="login">登录</a>
                     </div>
                 </div>
             </div>
@@ -64,7 +65,7 @@
         <!-- 登录模态框 end -->
     
         <!-- 遮罩层 start -->
-        <div class="md-overlay"></div>
+        <div class="md-overlay" v-show="loginModalFlag"></div>
         <!-- 遮罩层 end -->
     
     </header>
@@ -160,12 +161,34 @@ export default {
         return {
             userName: '',
             userPwd: '',
-            errorTip: ''
+            nickName: '',
+            errorTip: false,
+            emptyTip: false,
+            loginModalFlag: true
         }
     },
     methods: {
         login() {
+            if (!this.userName || !this.userPwd) {
+                this.errorTip = false;
+                this.emptyTip = true;
+                return;
+            }
+            axios.post('/users/login', {
+                userName: this.userName,
+                userPwd: this.userPwd
+            }).then((res) => {
+                this.emptyTip = false;
 
+                let data = res.data;
+                if (data.status === '0') {
+                    this.errorTip = false;
+                    this.loginModalFlag = false;
+                    this.nickName = res.data.result.userName;
+                } else {
+                    this.errorTip = true;
+                }
+            })
         }
     }
 }
