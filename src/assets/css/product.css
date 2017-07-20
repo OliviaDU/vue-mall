@@ -404,7 +404,11 @@
     color: #ee7a23;
 }
 
-.filter-nav .sort-up .icon-arrow-short {
+.icon-arrow-short {
+    transition: all .3s ease-out;
+}
+
+.filter-nav .sort-up {
     -webkit-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
     transform: rotate(180deg);

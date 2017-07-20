@@ -17,7 +17,7 @@
                     <span class="sortby">Sort by:</span>
                     <a href="javascript:void(0)" class="default cur">Default</a>
                     <a @click="sortGoods" href="javascript:void(0)" class="price">Price
-                        <svg class="icon icon-arrow-short">
+                        <svg class="icon icon-arrow-short" :class="{'sort-up':sortFlag}">
                             <use xlink:href="#icon-arrow-short"></use>
                         </svg>
                     </a>
@@ -193,16 +193,16 @@ export default {
                 this.getGoodsList(true);
             }, 500);
         },
-        addCart(productId){
+        addCart(productId) {
             axios
-            .post('/goods/addCart',{productId:productId})
-            .then((res)=>{
-                if(res.data.status=='0'){
-                    alert('添加成功')
-                }else{
-                    alert('添加失败')
-                }
-            })
+                .post('/goods/addCart', { productId: productId })
+                .then((res) => {
+                    if (res.data.status == '0') {
+                        alert('添加成功')
+                    } else {
+                        alert('添加失败')
+                    }
+                })
         }
     }
 }
