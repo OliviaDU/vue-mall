@@ -21,7 +21,7 @@ db.on('disconnected', () => {
 });
 
 //为商品展示添加路由
-router.get('/', (req, res, next) => {
+router.get('/list', (req, res, next) => {
     let page = Number(req.query.page),//当前所在页数
         pageSize = Number(req.query.pageSize),//每页的条数
         priceLevel = req.query.priceLevel,//价格区间的index

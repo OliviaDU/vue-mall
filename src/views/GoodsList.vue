@@ -149,7 +149,7 @@ export default {
                 priceLevel: this.priceChecked
             };
 
-            axios.get('/goods', {
+            axios.get('/goods/list', {
                 params: param
             }).then((res) => {
                 this.loading = false;

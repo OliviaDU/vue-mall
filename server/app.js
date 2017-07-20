@@ -13,7 +13,7 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('.html',ejs.__express);
+app.engine('.html', ejs.__express);
 app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
@@ -23,6 +23,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  if (req.cookies.userId) {
+    next();
+  } else {
+    console.log(req.path);
+    //设置拦截白名单
+    if (req.originalUrl == '/users/login' ||
+      req.originalUrl == '/users/logout' ||
+      req.path === '/goods/list') {
+      next();
+    } else {
+      res.json({
+        status: '1001',
+        msg: '当前未登录',
+        result: ''
+      });
+    }
+  }
+});
 
 app.use('/', index);
 app.use('/users', users);
