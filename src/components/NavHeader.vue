@@ -86,7 +86,18 @@ export default {
             loginModalFlag: false
         }
     },
+    mounted() {
+        this.checkLogin();
+    },
     methods: {
+        checkLogin() {
+            axios.get('/users/checkLogin').then((res)=>{
+                let data=res.data;
+                if(data.status==='0'){
+                    this.nickName = data.result.userName;
+                }
+            })
+        },
         login() {
             if (!this.userName || !this.userPwd) {
                 this.errorTip = false;
