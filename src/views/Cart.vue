@@ -107,10 +107,11 @@
         </div>
         <div class="cart-foot-wrap">
           <div class="cart-foot-inner">
+            <!-- 全选 -->
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;">
-                  <span class="checkbox-btn item-check-btn">
+                <a href="javascipt:;" @click="toggleCheckAll">
+                  <span class="checkbox-btn item-check-btn" :class="{check:checkAllFlag}">
                     <svg class="icon icon-ok">
                       <use xlink:href="#icon-ok" />
                     </svg>
@@ -119,15 +120,18 @@
                 </a>
               </div>
             </div>
+  
+            <!-- 所有商品合计价格   -->
             <div class="cart-foot-r">
               <div class="item-total">
                 合计:
-                <span class="total-price">100</span>
+                <span class="total-price">{{totalPrice}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">Checkout</a>
+                <a class="btn btn--red">&nbsp;&nbsp;结&nbsp;&nbsp;算&nbsp;&nbsp;</a>
               </div>
             </div>
+  
           </div>
         </div>
       </div>
@@ -170,6 +174,30 @@ export default {
       delCartModal: false
     }
   },
+  computed: {
+    //判断是否全部选中
+    checkAllFlag() {
+      return this.checkedCount === this.cartList.length;
+    },
+    //计算所有选择商品数
+    checkedCount() {
+      let count = 0;
+      for (let item of this.cartList) {
+        if (item.checked) count++;
+      }
+      return count;
+    },
+    //商品合计价格
+    totalPrice() {
+      let sum = 0;
+      for (let item of this.cartList) {
+        if (item.checked) {
+          sum += +item.salePrice * +item.productNum;
+        }
+      }
+      return sum;
+    }
+  },
   methods: {
     closeModal() {
       this.delCartModal = false;
@@ -179,6 +207,7 @@ export default {
         this.cartList = res.data.result;
       });
     },
+    //删除商品
     delCart() {
       axios.post('/users/carDel', {
         productId: this.delItem.productId
@@ -191,10 +220,12 @@ export default {
         console.log(err);
       });
     },
+    //删除商品确认框
     delCartConfirm(item) {
       this.delCartModal = true;
       this.delItem = item;
     },
+    //修改购物车商品数量和选择状态
     editCart(flag, item) {
       if (flag === 'add') {
         item.productNum++;
@@ -213,8 +244,24 @@ export default {
         productNum: item.productNum,
         checked: item.checked
       }).then((res) => {
-
+        if (res.data.status === '0') {
+          this.delCartModal = false;
+          this.init();
+        }
       });
+    },
+    //全选
+    toggleCheckAll() {
+      let flag = !this.checkAllFlag;//flag可以通过赋值改变的，this.checkAllFlag是实时计算得到的
+      for (let item of this.cartList) {
+        item.checked = flag;//让所有勾选框与全选状态同步
+      }
+
+      axios.post('/users/editCheckAll', {
+        checkAll: this.checkAllFlag
+      }).then((res) => {
+        console.log('save success');
+      })
     }
   },
   mounted() {

@@ -146,7 +146,7 @@ router.post('/carDel', (req, res, next) => {
 });
 
 /**
- * 修改购物车商品数量
+ * 修改购物车单个商品数量和选择状态
  */
 router.post('/cartEdit', (req, res, next) => {
   let productId = req.body.productId,
@@ -171,6 +171,38 @@ router.post('/cartEdit', (req, res, next) => {
     });
   });
 
+});
+
+/**
+ * 全选
+ */
+router.post('/editCheckAll', (req, res, next) => {
+  let userId = req.cookies.userId,
+    checkAll = req.body.checkAll;
+
+  User.findOne({ userId: userId })
+    .then((user) => {
+      if (user) {
+        for (let item of user.cartList) {
+          item.checked = checkAll;
+        }
+        user.save();
+      }
+    })
+    .then(() => {
+      res.json({
+        status: '0',
+        msg: '',
+        result: 'success'
+      });
+    })
+    .catch((err) => {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    });
 });
 
 module.exports = router;
