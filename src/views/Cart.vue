@@ -55,7 +55,7 @@
                 <!-- 勾选框 -->
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{check:item.checked}" @click="editCart('checked',item)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -199,17 +199,20 @@ export default {
       if (flag === 'add') {
         item.productNum++;
       }
-      else {
+      else if (flag === 'minus') {
         if (item.productNum <= 1) {
           return;
         }
         item.productNum--;
+      } else {
+        item.checked = !item.checked;
       }
 
       axios.post('/users/cartEdit', {
         productId: item.productId,
-        productNum: item.productNum
-      }).then((res)=>{
+        productNum: item.productNum,
+        checked: item.checked
+      }).then((res) => {
 
       });
     }

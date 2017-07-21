@@ -116,7 +116,7 @@ router.post('/addCart', (req, res, next) => {
                 Goods.findOne({ productId: productId })
                     .then((goodsDoc) => {
                         goodsDoc.productNum = 1;
-                        goodsDoc.checked = 1;
+                        goodsDoc.checked = true;
                         user.cartList.push(goodsDoc);
                         return user.save();
                     });
