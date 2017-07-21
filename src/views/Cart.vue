@@ -72,7 +72,7 @@
                 </div>
                 <!-- 商品单价 -->
                 <div class="cart-tab-2">
-                  <div class="item-price">{{item.salePrice}}</div>
+                  <div class="item-price">{{item.salePrice|currency('¥')}}</div>
                 </div>
                 <!-- 商品数量 -->
                 <div class="cart-tab-3">
@@ -88,7 +88,7 @@
                 </div>
                 <!-- 商品总价 -->
                 <div class="cart-tab-4">
-                  <div class="item-price-total">{{item.salePrice*item.productNum}}</div>
+                  <div class="item-price-total">{{(item.salePrice*item.productNum)|currency('¥')}}</div>
                 </div>
                 <!-- 删除商品 -->
                 <div class="cart-tab-5">
@@ -125,7 +125,7 @@
             <div class="cart-foot-r">
               <div class="item-total">
                 合计:
-                <span class="total-price">{{totalPrice}}</span>
+                <span class="total-price">{{totalPrice|currency('¥')}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red">&nbsp;&nbsp;结&nbsp;&nbsp;算&nbsp;&nbsp;</a>
@@ -159,6 +159,7 @@ import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
 import Modal from '../components/Modal'
 import axios from 'axios'
+import { currency } from '../util/currency'
 
 export default {
   components: {
@@ -266,6 +267,9 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  filters: {
+    currency: currency
   }
 }
 </script>
