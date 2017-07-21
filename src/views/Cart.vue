@@ -52,6 +52,7 @@
             </div>
             <ul class="cart-item-list">
               <li v-for="item in cartList" :key="item.productId">
+                <!-- 勾选框 -->
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn">
@@ -60,18 +61,20 @@
                       </svg>
                     </a>
                   </div>
+                  <!-- 商品图片 -->
                   <div class="cart-item-pic">
-                    <img :src="'/static/'+item.productImage" :alt="item.productName"> 
+                    <img :src="'/static/'+item.productImage" :alt="item.productName">
                   </div>
+                  <!-- 商品名称 -->
                   <div class="cart-item-title">
                     <div class="item-name">{{item.productName}}</div>
                   </div>
                 </div>
-  
+                <!-- 商品单价 -->
                 <div class="cart-tab-2">
                   <div class="item-price">{{item.salePrice}}</div>
                 </div>
-  
+                <!-- 商品数量 -->
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
@@ -83,14 +86,14 @@
                     </div>
                   </div>
                 </div>
-  
+                <!-- 商品总价 -->
                 <div class="cart-tab-4">
                   <div class="item-price-total">{{item.salePrice*item.productNum}}</div>
                 </div>
-  
+                <!-- 删除商品 -->
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -118,7 +121,7 @@
             </div>
             <div class="cart-foot-r ">
               <div class="item-total ">
-               合计:
+                合计:
                 <span class="total-price ">100</span>
               </div>
               <div class="btn-wrap ">
@@ -129,13 +132,17 @@
         </div>
       </div>
     </div>
-    <Modal @close="closeModal ">
-      <p slot="message ">你确认要删除此条数据吗?</p>
-      <div slot="btnGroup ">
-        <a class="btn btn--m " href="javascript:; ">确认</a>
-        <a class="btn btn--m btn--red " href="javascript:; " @click="closeModal ">关闭</a>
+  
+    <!-- 删除商品弹出框 start -->
+    <Modal @close="closeModal" :modalShow="delCartModal">
+      <p slot="message">你确定要删除这个商品吗?</p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="delCart">确定</a>
+        <a class="btn btn--m btn--red" href="javascript:;" @click="closeModal">关闭</a>
       </div>
     </Modal>
+    <!-- 删除商品弹出框 end -->
+  
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -148,6 +155,7 @@ import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
 import Modal from '../components/Modal'
 import axios from 'axios'
+
 export default {
   components: {
     NavHeader,
@@ -159,20 +167,36 @@ export default {
     return {
       cartList: [],
       delItem: {},
-      modalConfirm: false
+      delCartModal: false
     }
   },
   methods: {
     closeModal() {
-
+      this.delCartModal = false;
     },
     init() {
       axios.get('/users/cartList').then((res) => {
         this.cartList = res.data.result;
       });
+    },
+    delCart() {
+      axios.post('/users/carDel', {
+        productId: this.delItem.productId
+      }).then((res) => {
+          if (res.data.status === '0') {
+            this.delCartModal = false;
+            this.init();
+          }
+        }).catch((err)=>{
+          console.log(err);
+        });
+    },
+    delCartConfirm(item) {
+      this.delCartModal = true;
+      this.delItem = item;
     }
   },
-  mounted(){
+  mounted() {
     this.init();
   }
 }

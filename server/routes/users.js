@@ -23,11 +23,11 @@ router.post('/login', (req, res, next) => {
         //cookie可能会伪造
         res.cookie('userId', doc.userId, {
           path: '/',
-          maxAge: 1000 * 60 * 60
+          maxAge: 1000 * 60 * 60 * 24
         });
         res.cookie('userName', doc.userName, {
           path: '/',
-          maxAge: 1000 * 60 * 60
+          maxAge: 1000 * 60 * 60 * 24
         });
         // req.session.user = doc;
 
@@ -115,5 +115,34 @@ router.get('/cartList', (req, res, next) => {
     });
 });
 
+/**
+ * 删除用户购物车数据
+ */
+router.post('/carDel', (req, res, next) => {
+  let productId = req.body.productId,
+    userId = req.cookies.userId;
+
+  User.update({
+    userId: userId
+  }, {
+      $pull: {
+        'cartList': { 'productId': productId }
+      }
+    })
+    .then(() => {
+      res.json({
+        status: '0',
+        msg: '',
+        result: 'success'
+      });
+    })
+    .catch((err) => {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    });
+});
 
 module.exports = router;
