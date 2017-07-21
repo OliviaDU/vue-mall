@@ -145,4 +145,30 @@ router.post('/carDel', (req, res, next) => {
     });
 });
 
+/**
+ * 修改购物车商品数量
+ */
+router.post('/cartEdit', (req, res, next) => {
+  let productId = req.body.productId,
+    userId = req.cookies.userId,
+    productNum = req.body.productNum;
+
+  User.update({ userId: userId, "cartList.productId": productId }, {
+    "cartList.$.productNum": productNum
+  }).then(() => {
+    res.json({
+      status: '0',
+      msg: '',
+      result: 'success'
+    });
+  }).catch((err) => {
+    res.json({
+      status: '1',
+      msg: err.message,
+      result: ''
+    });
+  });
+
+});
+
 module.exports = router;

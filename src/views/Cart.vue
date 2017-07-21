@@ -79,9 +79,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub">-</a>
+                        <a class="input-sub noselect" @click="editCart('minus',item)">-</a>
                         <span class="select-ipt">{{item.productNum}}</span>
-                        <a class="input-add">+</a>
+                        <a class="input-add noselect" @click="editCart('add',item)">+</a>
                       </div>
                     </div>
                   </div>
@@ -105,27 +105,27 @@
             </ul>
           </div>
         </div>
-        <div class="cart-foot-wrap ">
-          <div class="cart-foot-inner ">
-            <div class="cart-foot-l ">
-              <div class="item-all-check ">
-                <a href="javascipt:; ">
-                  <span class="checkbox-btn item-check-btn ">
-                    <svg class="icon icon-ok ">
-                      <use xlink:href="#icon-ok " />
+        <div class="cart-foot-wrap">
+          <div class="cart-foot-inner">
+            <div class="cart-foot-l">
+              <div class="item-all-check">
+                <a href="javascipt:;">
+                  <span class="checkbox-btn item-check-btn">
+                    <svg class="icon icon-ok">
+                      <use xlink:href="#icon-ok" />
                     </svg>
                   </span>
                   <span>全选</span>
                 </a>
               </div>
             </div>
-            <div class="cart-foot-r ">
-              <div class="item-total ">
+            <div class="cart-foot-r">
+              <div class="item-total">
                 合计:
-                <span class="total-price ">100</span>
+                <span class="total-price">100</span>
               </div>
-              <div class="btn-wrap ">
-                <a class="btn btn--red ">Checkout</a>
+              <div class="btn-wrap">
+                <a class="btn btn--red">Checkout</a>
               </div>
             </div>
           </div>
@@ -183,17 +183,35 @@ export default {
       axios.post('/users/carDel', {
         productId: this.delItem.productId
       }).then((res) => {
-          if (res.data.status === '0') {
-            this.delCartModal = false;
-            this.init();
-          }
-        }).catch((err)=>{
-          console.log(err);
-        });
+        if (res.data.status === '0') {
+          this.delCartModal = false;
+          this.init();
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     delCartConfirm(item) {
       this.delCartModal = true;
       this.delItem = item;
+    },
+    editCart(flag, item) {
+      if (flag === 'add') {
+        item.productNum++;
+      }
+      else {
+        if (item.productNum <= 1) {
+          return;
+        }
+        item.productNum--;
+      }
+
+      axios.post('/users/cartEdit', {
+        productId: item.productId,
+        productNum: item.productNum
+      }).then((res)=>{
+
+      });
     }
   },
   mounted() {
