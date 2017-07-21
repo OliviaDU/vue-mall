@@ -91,4 +91,29 @@ router.get('/checkLogin', (req, res, next) => {
   }
 });
 
+/**
+ * 查询用户购物车数据
+ */
+router.get('/cartList', (req, res, next) => {
+  let userId = req.cookies.userId;
+  User.findOne({ userId: userId })
+    .then((doc) => {
+      if (doc) {
+        res.json({
+          status: '0',
+          msg: '',
+          result: doc.cartList
+        });
+      }
+    })
+    .catch((err) => {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    });
+});
+
+
 module.exports = router;

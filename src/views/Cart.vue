@@ -51,8 +51,7 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li>
-
+              <li v-for="item in cartList" :key="item.productId">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn">
@@ -62,43 +61,43 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img>
+                    <img :src="'/static/'+item.productImage" :alt="item.productName"> 
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name"></div>
+                    <div class="item-name">{{item.productName}}</div>
                   </div>
                 </div>
-
+  
                 <div class="cart-tab-2">
-                  <div class="item-price"></div>
+                  <div class="item-price">{{item.salePrice}}</div>
                 </div>
-
+  
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub">-</a>
-                        <span class="select-ipt"></span>
+                        <span class="select-ipt">{{item.productNum}}</span>
                         <a class="input-add">+</a>
                       </div>
                     </div>
                   </div>
                 </div>
-
+  
                 <div class="cart-tab-4">
-                  <div class="item-price-total"></div>
+                  <div class="item-price-total">{{item.salePrice*item.productNum}}</div>
                 </div>
-
+  
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
                     <a href="javascript:;" class="item-edit-btn">
-                      <svg class="icon icon-del ">
-                        <use xlink:href="#icon-del "></use>
+                      <svg class="icon icon-del">
+                        <use xlink:href="#icon-del"></use>
                       </svg>
                     </a>
                   </div>
                 </div>
-
+  
               </li>
             </ul>
           </div>
@@ -119,7 +118,7 @@
             </div>
             <div class="cart-foot-r ">
               <div class="item-total ">
-                Item total:
+               合计:
                 <span class="total-price ">100</span>
               </div>
               <div class="btn-wrap ">
@@ -166,7 +165,15 @@ export default {
   methods: {
     closeModal() {
 
+    },
+    init() {
+      axios.get('/users/cartList').then((res) => {
+        this.cartList = res.data.result;
+      });
     }
+  },
+  mounted(){
+    this.init();
   }
 }
 </script>
