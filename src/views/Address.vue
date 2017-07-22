@@ -61,7 +61,7 @@
             <div class="addr-list">
               <ul>
                 <!-- 单个地址框 -->
-                <li v-for="(item,index) in addressListFilter" :key="item.addressId" :class="{check:checkIndex===index}" @click="checkIndex=index">
+                <li v-for="(item,index) in addressListFilter" :key="item.addressId" :class="{check:checkedIndex===index}" @click="selectAddr(index,item.addressId)">
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
@@ -118,6 +118,7 @@
               <span>配送方式</span>
             </h2>
           </div>
+  
           <div class="shipping-method-wrap">
             <div class="shipping-method">
               <ul>
@@ -131,9 +132,11 @@
               </ul>
             </div>
           </div>
+          <!-- 进入下一步骤 -->
           <div class="next-btn-wrap">
-            <router-link class="btn btn--m btn--red" :to="{path:'orderConfirm'}">下一步</router-link>
+            <router-link class="btn btn--m btn--red" :to="{path:'orderConfirm',query:{'addressId':checkedAddressId}}">下一步</router-link>
           </div>
+  
         </div>
       </div>
     </div>
@@ -174,7 +177,8 @@ export default {
     return {
       addressList: [],
       limit: 3,
-      checkIndex: 0,
+      checkedIndex: 0,
+      checkedAddressId: '',
       isModalShow: false,
       deleteAddressId: ''
     }
@@ -200,7 +204,7 @@ export default {
               }
             });
             this.addressList = addressList;
-            this.checkIndex = 0;
+            this.checkedIndex = 0;
           }
         })
         .catch((err) => {
@@ -224,6 +228,10 @@ export default {
         }
       });
       this.init();
+    },
+    selectAddr(index, id) {
+      this.checkedIndex = index;
+      this.checkedAddressId = id;
     },
     deleteAddr(id) {
       this.isModalShow = true;
