@@ -281,4 +281,35 @@ router.post('/setDefaultAddr', (req, res, next) => {
       });
     });
 });
+
+/**
+ * 删除地址接口
+ */
+router.post('/deleteAddress', (req, res, err) => {
+  let userId = req.cookies.userId,
+    addressId = req.body.addressId;
+
+  User.update({
+    userId: userId
+  }, {
+      $pull: {
+        'addressList': { 'addressId': addressId }
+      }
+    })
+    .then(() => {
+      res.json({
+        status: '0',
+        msg: '删除成功',
+        result: ''
+      });
+    })
+    .catch((err) => {
+      res.json({
+        status: '0',
+        msg: err.message,
+        result: ''
+      });
+    });
+});
+
 module.exports = router;

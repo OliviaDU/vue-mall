@@ -38,15 +38,9 @@
           </symbol>
         </defs>
       </svg>
-      
+  
       <div class="container">
         <div class="checkout-addr">
-          <div class="page-title-normal">
-            <h2 class="page-title-h2">
-              <span>check out</span>
-            </h2>
-          </div>
-
           <!--  步骤条 -->
           <div class="check-step">
             <ul>
@@ -56,36 +50,42 @@
               <li>完成订单</li>
             </ul>
           </div>
-  
-          <!-- 地址列表 -->
+          <!-- 地址列表title -->
           <div class="page-title-normal checkout-title">
             <h2>
               <span>配送地址</span>
             </h2>
           </div>
+          <!-- 地址列表content -->
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
+                <!-- 单个地址框 -->
                 <li v-for="(item,index) in addressListFilter" :key="item.addressId" :class="{check:checkIndex===index}" @click="checkIndex=index">
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
                     <dd class="tel">{{item.tel}}</dd>
                   </dl>
+                  <!-- 删除地址 -->
                   <div class="addr-opration addr-del">
-                    <a href="javascript:;" class="addr-del-btn">
+                    <a href="javascript:;" class="addr-del-btn" @click="deleteAddr(item.addressId)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
                     </a>
                   </div>
+                  <!-- 设置默认地址 -->
                   <div class="addr-opration addr-set-default" v-if="!item.isDefault" @click="setDefault(item.addressId)">
                     <a href="javascript:;" class="addr-set-default-btn">
                       <i>设为默认地址</i>
                     </a>
                   </div>
+                  <!-- 默认地址 -->
                   <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                 </li>
+  
+                <!-- 添加新地址 -->
                 <li class="addr-new">
                   <div class="add-new-inner">
                     <i class="icon-add">
@@ -96,14 +96,15 @@
                     <p>添加新地址</p>
                   </div>
                 </li>
+  
               </ul>
             </div>
   
             <div class="shipping-addr-more">
               <a class="addr-more-btn up-down-btn" :class="{'open':limit>3}" href="javascript:;" @click="expand">
-                <span v-show="limit<=3">更多</span>
+                <span v-show="limit<=3&&addressList.length>3">更多</span>
                 <span v-show="limit>3">收起</span>
-                <i class="i-up-down">
+                <i class="i-up-down" v-show="addressList.length>3">
                   <i class="i-up-down-l"></i>
                   <i class="i-up-down-r"></i>
                 </i>
@@ -136,18 +137,18 @@
         </div>
       </div>
     </div>
-
+  
     <!-- 删除地址确认框 -->
-    <modal>
+    <modal :modal-show="isModalShow" @close="isModalShow=false">
       <p slot="message">
         您是否确认要删除此地址?
       </p>
       <div slot="btnGroup">
-        <a class="btn btn--m" href="javascript:;">确认</a>
-        <a class="btn btn--m btn--red" href="javascript:;">取消</a>
+        <a class="btn btn--m" href="javascript:;" @click="deleteConfirm">确认</a>
+        <a class="btn btn--m btn--red" href="javascript:;" @click="isModalShow=false">取消</a>
       </div>
     </modal>
-
+  
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -173,7 +174,9 @@ export default {
     return {
       addressList: [],
       limit: 3,
-      checkIndex: 0
+      checkIndex: 0,
+      isModalShow: false,
+      deleteAddressId: ''
     }
   },
   computed: {
@@ -197,6 +200,7 @@ export default {
               }
             });
             this.addressList = addressList;
+            this.checkIndex = 0;
           }
         })
         .catch((err) => {
@@ -220,6 +224,24 @@ export default {
         }
       });
       this.init();
+    },
+    deleteAddr(id) {
+      this.isModalShow = true;
+      this.deleteAddressId = id;
+    },
+    deleteConfirm() {
+      axios.post('users/deleteAddress', {
+        addressId: this.deleteAddressId
+      })
+        .then((res) => {
+          if (res.data.status === '0') {
+            this.init();
+            this.isModalShow = false;
+          }
+        })
+        .catch((err) => {
+          console('delete failed ' + err.message);
+        })
     }
   },
   mounted() {
