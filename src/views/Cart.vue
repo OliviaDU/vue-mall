@@ -128,7 +128,7 @@
                 <span class="total-price">{{totalPrice|currency('¥')}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">&nbsp;&nbsp;结&nbsp;&nbsp;算&nbsp;&nbsp;</a>
+                <a class="btn btn--red" :class="{'btn--dis':checkedCount===0}" @click="checkOut">&nbsp;&nbsp;结&nbsp;&nbsp;算&nbsp;&nbsp;</a>
               </div>
             </div>
   
@@ -263,6 +263,14 @@ export default {
       }).then((res) => {
         console.log('save success');
       })
+    },
+    //结算
+    checkOut(){
+      if(this.checkedCount>0){
+        this.$router.push({
+          path:'/address'
+        })
+      }
     }
   },
   mounted() {

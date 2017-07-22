@@ -611,6 +611,7 @@ a:hover {
     height: 55px;
     line-height: 54px;
     padding: 0 10px;
+    user-select: none;
 }
 
 .btn,
