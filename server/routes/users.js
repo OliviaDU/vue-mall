@@ -205,4 +205,29 @@ router.post('/editCheckAll', (req, res, next) => {
     });
 });
 
+/**
+ * 查询用户地址接口
+ */
+router.get('/addressList', (req, res, next) => {
+  let userId = req.cookies.userId;
+
+  User.findOne({ userId: userId })
+    .then((user) => {
+      if (user) {
+        res.json({
+          status: '0',
+          msg: '',
+          result: user.addressList
+        });
+      }
+    })
+    .catch((err) => {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    });
+});
+
 module.exports = router;
