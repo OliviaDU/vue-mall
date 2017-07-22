@@ -230,4 +230,55 @@ router.get('/addressList', (req, res, next) => {
     });
 });
 
+/**
+ * 设置默认地址接口
+ */
+router.post('/setDefaultAddr', (req, res, next) => {
+  let userId = req.cookies.userId,
+    addressId = req.body.addressId;
+
+  let addressList,//用户地址列表
+    defaultIndex;//默认地址索引
+
+  User.findOne({ userId: userId })
+    .then((user) => {
+      addressList = user.addressList;
+      //如果没有地址信息
+      if (!addressList) {
+        res.json({
+          status: '1003',
+          msg: 'addressId is null',
+          result: ''
+        });
+      }
+      //如果有地址信息
+      else {
+        addressList.forEach((item, index) => {
+          if (item.addressId === addressId) {
+            item.isDefault = true;
+            defaultIndex = index;
+          } else {
+            item.isDefault = false;
+          }
+        });
+
+        //将修改结果保存到数据库
+        return user.save();
+      }
+    })
+    .then(() => {
+      res.json({
+        status: '0',
+        msg: '',
+        result: 'success'
+      });
+    })
+    .catch((err) => {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: 'set default address failed'
+      });
+    });
+});
 module.exports = router;

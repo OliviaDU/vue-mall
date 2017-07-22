@@ -38,6 +38,7 @@
           </symbol>
         </defs>
       </svg>
+      
       <div class="container">
         <div class="checkout-addr">
           <div class="page-title-normal">
@@ -45,7 +46,8 @@
               <span>check out</span>
             </h2>
           </div>
-          <!-- process step -->
+
+          <!--  步骤条 -->
           <div class="check-step">
             <ul>
               <li class="cur">确认地址</li>
@@ -55,7 +57,7 @@
             </ul>
           </div>
   
-          <!-- address list -->
+          <!-- 地址列表 -->
           <div class="page-title-normal checkout-title">
             <h2>
               <span>配送地址</span>
@@ -77,7 +79,7 @@
                       </svg>
                     </a>
                   </div>
-                  <div class="addr-opration addr-set-default">
+                  <div class="addr-opration addr-set-default" v-if="!item.isDefault" @click="setDefault(item.addressId)">
                     <a href="javascript:;" class="addr-set-default-btn">
                       <i>设为默认地址</i>
                     </a>
@@ -109,7 +111,7 @@
             </div>
           </div>
   
-          <!-- shipping method-->
+          <!-- 配送方式-->
           <div class="page-title-normal checkout-title">
             <h2>
               <span>配送方式</span>
@@ -134,6 +136,8 @@
         </div>
       </div>
     </div>
+
+    <!-- 删除地址确认框 -->
     <modal>
       <p slot="message">
         您是否确认要删除此地址?
@@ -143,6 +147,7 @@
         <a class="btn btn--m btn--red" href="javascript:;">取消</a>
       </div>
     </modal>
+
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -168,7 +173,7 @@ export default {
     return {
       addressList: [],
       limit: 3,
-      checkIndex:0
+      checkIndex: 0
     }
   },
   computed: {
@@ -178,14 +183,25 @@ export default {
   },
   methods: {
     init() {
-      axios.get('/users/addressList').then((res) => {
-        let data = res.data;
-        if (data.status === '0') {
-          this.addressList = data.result;
-        }
-      }).catch((err) => {
-        console.log('get address failed')
-      })
+      axios.get('/users/addressList')
+        .then((res) => {
+          let data = res.data;
+          if (data.status === '0' && data.result != null) {
+            //获取地址列表
+            let addressList = data.result;
+            //将默认地址置顶
+            addressList.forEach((item, index) => {
+              if (item.isDefault) {
+                let defaultAddr = addressList.splice(index, 1)[0];//返回的是一个数组！！
+                addressList.unshift(defaultAddr);//将其添加到队列开头
+              }
+            });
+            this.addressList = addressList;
+          }
+        })
+        .catch((err) => {
+          console.log('get address failed: ' + err.message);
+        })
     },
     expand() {
       if (this.limit === 3) {
@@ -193,6 +209,17 @@ export default {
       } else {
         this.limit = 3;
       }
+    },
+    setDefault(addressId) {
+      axios.post('/users/setDefaultAddr', {
+        addressId: addressId
+      }).then((res) => {
+        let data = res.data;
+        if (data.status === '0') {
+          console.log('set default address success');
+        }
+      });
+      this.init();
     }
   },
   mounted() {
