@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('./../models/user');
+require('../util/date');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -306,6 +307,77 @@ router.post('/deleteAddress', (req, res, err) => {
     .catch((err) => {
       res.json({
         status: '0',
+        msg: err.message,
+        result: ''
+      });
+    });
+});
+
+/**
+ * 生成订单
+ */
+router.post('/payMent', (req, res, next) => {
+  let userId = req.cookies.userId,
+    addressId = req.body.addressId,
+    orderTotal = req.body.orderTotal;
+
+  let address = '',
+    goodsList = [],
+    order;
+
+  User.findOne({ userId: userId })
+    .then((doc) => {
+      //获取用户订单地址信息
+      doc.addressList.forEach((item) => {
+        if (addressId === item.addressId) {
+          address = item;
+        }
+      });
+
+      //获取用户购买商品信息
+      doc.cartList.filter((item) => {
+        if (item.checked) {
+          goodsList.push(item);
+        }
+      });
+
+      let platform = '622';
+      //生成两个随机数
+      let r1 = Math.floor(Math.random() * 10),
+        r2 = Math.floor(Math.random() * 10);
+
+      //系统时间
+      let sysyDate = new Date().Format('yyyyMMddhhmmss'),
+        createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+
+      //订单id号
+      let orderId = platform + r1 + sysyDate + r2;
+
+      order = {
+        orderId: orderId,
+        orderTotal: req.body.orderTotal,
+        addressInfo: address,
+        goodsList: goodsList,
+        orderStatus: '1',
+        createData: createDate
+      };
+
+      doc.orderList.push(order);
+      return doc.save();//返回的是user
+    })
+    .then(() => {
+      res.json({
+        status: '0',
+        msg: '',
+        result: {
+          orderId: order.orderId,
+          orderTotal: order.orderTotal
+        }
+      });
+    })
+    .catch((err) => {
+      res.json({
+        status: '1',
         msg: err.message,
         result: ''
       });

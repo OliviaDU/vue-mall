@@ -171,18 +171,22 @@ export default {
       });
     },
     payMent() {
-      let addressId = this.$route.query.addressId;
-      axios.post("/users/payMent", {
-        addressId: addressId,
-        orderTotal: this.orderTotal
-      }).then((res) => {
-        let data = res.data;
-        if (data.status == "0") {
-          this.$router.push({
-            path: '/orderSuccess?orderId=' + data.result.orderId
-          })
-        }
-      })
+      axios
+        .post("/users/payMent", {
+          addressId: this.$route.query.addressId,
+          orderTotal: this.orderTotal
+        })
+        .then((res) => {
+          let data = res.data;
+          if (data.status == "0") {
+            this.$router.push({
+              path: '/orderSuccess?orderId=' + data.result.orderId
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        })
     }
   },
   mounted() {
