@@ -223,10 +223,14 @@ export default {
                     if (res.data.status == '0') {
                         //如果用户已登录
                         this.modalShowCart = true;
+                        this.$store.commit('updateCartCount', 1);
                     } else {
                         //如果用户未登录
                         this.modalShow = true;
                     }
+                })
+                .catch((err) => {
+                    console.log(err.message);
                 })
         },
         closeModal() {

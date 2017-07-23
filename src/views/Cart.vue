@@ -205,21 +205,26 @@ export default {
     },
     init() {
       axios.get('/users/cartList').then((res) => {
-        this.cartList = res.data.result;
+        let result = res.data.result;
+        this.cartList = result.cartList;
+        this.$store.commit('initCartCount', result.cartCount);
       });
     },
     //删除商品
     delCart() {
-      axios.post('/users/carDel', {
-        productId: this.delItem.productId
-      }).then((res) => {
-        if (res.data.status === '0') {
-          this.delCartModal = false;
-          this.init();
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
+      axios
+        .post('/users/carDel', {
+          productId: this.delItem.productId
+        })
+        .then((res) => {
+          if (res.data.status === '0') {
+            this.delCartModal = false;
+            this.init();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     //删除商品确认框
     delCartConfirm(item) {
@@ -265,10 +270,10 @@ export default {
       })
     },
     //结算
-    checkOut(){
-      if(this.checkedCount>0){
+    checkOut() {
+      if (this.checkedCount > 0) {
         this.$router.push({
-          path:'/address'
+          path: '/address'
         })
       }
     }

@@ -64,6 +64,10 @@ router.post('/logout', (req, res, next) => {
     path: '/',
     maxAge: -1
   });
+  res.cookie('userName', '', {
+    path: '/',
+    maxAge: -1
+  });
   res.json({
     status: '0',
     msg: '',
@@ -93,27 +97,69 @@ router.get('/checkLogin', (req, res, next) => {
 });
 
 /**
+ * 查询用户购物车商品总数
+ */
+router.get('/cartCount', (req, res, next) => {
+  let userId = req.cookies.userId;
+
+  if (userId) {
+    User.findOne({ userId: userId })
+      .then((doc) => {
+        if (doc) {
+          let cartCount = doc.cartList.reduce((sum, val) => {
+            return sum + (+val.productNum);
+          }, 0);
+
+          res.json({
+            status: '0',
+            msg: '',
+            result: cartCount
+          });
+        }
+      })
+      .catch((err) => {
+        res.json({
+          status: '1',
+          msg: err.message,
+          result: ''
+        });
+      });
+  }
+});
+
+/**
  * 查询用户购物车数据
  */
 router.get('/cartList', (req, res, next) => {
   let userId = req.cookies.userId;
-  User.findOne({ userId: userId })
-    .then((doc) => {
-      if (doc) {
+
+  if (userId) {
+    User.findOne({ userId: userId })
+      .then((doc) => {
+        if (doc) {
+          
+          let cartCount = doc.cartList.reduce((sum, val) => {
+            return sum + (+val.productNum);
+          }, 0);
+
+          res.json({
+            status: '0',
+            msg: '',
+            result: {
+              cartList: doc.cartList,
+              cartCount: cartCount
+            }
+          });
+        }
+      })
+      .catch((err) => {
         res.json({
-          status: '0',
-          msg: '',
-          result: doc.cartList
+          status: '1',
+          msg: err.message,
+          result: ''
         });
-      }
-    })
-    .catch((err) => {
-      res.json({
-        status: '1',
-        msg: err.message,
-        result: ''
       });
-    });
+  }
 });
 
 /**
