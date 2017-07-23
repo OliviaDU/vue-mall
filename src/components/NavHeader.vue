@@ -30,7 +30,7 @@
             <div class="navbar-right-container" style="display: flex;">
                 <div class="navbar-menu-container">
                     <!--<a href="/" class="navbar-link">我的账户</a>-->
-                    <span class="navbar-link" v-if="nickName">{{nickName}}</span>
+                    <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
                     <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">登录</a>
                     <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logout">退出</a>
                     <div class="navbar-cart-container">
@@ -93,10 +93,14 @@ export default {
         return {
             userName: '',
             userPwd: '',
-            nickName: '',
             errorTip: false,
             emptyTip: false,
             loginModalFlag: false
+        }
+    },
+    computed: {
+        nickName() {
+            return this.$store.state.nickName;
         }
     },
     mounted() {
@@ -107,7 +111,8 @@ export default {
             axios.get('/users/checkLogin').then((res) => {
                 let data = res.data;
                 if (data.status === '0') {
-                    this.nickName = data.result.userName;
+                    //this.nickName = data.result.userName;
+                    this.$store.commit('updateUserInfo', data.result.userName)
                 }
             })
         },
@@ -117,21 +122,27 @@ export default {
                 this.emptyTip = true;
                 return;
             }
-            axios.post('/users/login', {
-                userName: this.userName,
-                userPwd: this.userPwd
-            }).then((res) => {
-                this.emptyTip = false;
+            axios
+                .post('/users/login', {
+                    userName: this.userName,
+                    userPwd: this.userPwd
+                })
+                .then((res) => {
+                    this.emptyTip = false;
 
-                let data = res.data;
-                if (data.status === '0') {
-                    this.errorTip = false;
-                    this.loginModalFlag = false;
-                    this.nickName = res.data.result.userName;
-                } else {
-                    this.errorTip = true;
-                }
-            })
+                    let data = res.data;
+                    if (data.status === '0') {
+                        this.errorTip = false;
+                        this.loginModalFlag = false;
+                       // this.nickName = res.data.result.userName;
+                        this.$store.commit('updateUserInfo', data.result.userName)
+                    } else {
+                        this.errorTip = true;
+                    }
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
         },
         logout() {
             axios.post('/users/logout').then((res) => {
