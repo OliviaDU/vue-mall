@@ -4,7 +4,6 @@
     width: 100%;
     background-color: white;
     font-family: "moderat", sans-serif;
-    font-size: 16px;
 }
 
 .navbar {
@@ -27,6 +26,7 @@
 
 .navbar-brand-logo {
     width: 120px;
+    padding: 10px;
 }
 
 .header a,
