@@ -17,14 +17,17 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 技术栈
+- MVVM框架： Vue 2.0
+- 源码：es6
+- 构建工具：webpack
+- 前端路由：vue-router
+- 状态管理：vuex
+- 服务端通讯：axios
+- 服务端：node.js
+- 数据库：mongoDB
+
+
+
