@@ -8,6 +8,7 @@ test/unit/coverage
 test/e2e/reports
 selenium-debug.log
 package-lock.json
+README.md
 
 # Editor directories and files
 .idea
@@ -15,3 +16,4 @@ package-lock.json
 *.ntvs*
 *.njsproj
 *.sln
+
