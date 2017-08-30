@@ -36,7 +36,6 @@ npm run build
 - Vuex：控制组件中数据的流动，使得数据流动更加清晰，有迹可循。
 - Vue-lazyload：实现图片懒加载
 - Vue-infinite-scroll：图片无限滚动
-- Vue-Validator：用来验证表单
 - Currency：用来格式化金额
 
 
