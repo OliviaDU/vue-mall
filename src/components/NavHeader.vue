@@ -20,8 +20,8 @@
                 </symbol>
             </defs>
         </svg>
-    
-        <div class="navbar">
+
+        <nav class="navbar">
             <div class="navbar-left-container">
                 <a href="/">
                     <img class="navbar-brand-logo" src="static/logo.png">
@@ -42,8 +42,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    
+        </nav>
+
         <!-- 登录模态框 start -->
         <div class="md-modal modal-msg md-modal-transition" :class="{'md-show':loginModalFlag}">
             <div class="md-modal-inner">
@@ -75,11 +75,11 @@
             </div>
         </div>
         <!-- 登录模态框 end -->
-    
+
         <!-- 遮罩层 start -->
-        <div class="md-overlay" v-show="loginModalFlag"></div>
+        <div class="md-overlay" v-show="loginModalFlag" @click="loginModalFlag=false"></div>
         <!-- 遮罩层 end -->
-    
+
     </header>
 </template>
 
