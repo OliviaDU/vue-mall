@@ -2,16 +2,16 @@
     <div>
         <!-- 导航头部  -->
         <nav-header></nav-header>
-    
+
         <!-- 面包屑导航 start -->
         <nav-bread>
             <span>商品</span>
         </nav-bread>
         <!-- 面包屑导航 end -->
-    
+
         <div class="accessory-result-page accessory-page">
             <div class="container">
-    
+
                 <!-- 排序工具栏 start -->
                 <div class="filter-nav">
                     <span class="sortby">排序:</span>
@@ -24,9 +24,9 @@
                     <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
                 </div>
                 <!-- 排序工具栏 end -->
-    
+
                 <div class="accessory-result">
-    
+
                     <!-- 响应式价格选择栏 start -->
                     <div class="filter stopPop" id="filter" :class="{'filterby-show':filterBy}">
                         <dl class="filter-price">
@@ -40,7 +40,8 @@
                         </dl>
                     </div>
                     <!-- 响应式价格选择栏 end -->
-    
+                    <div @click="filterBy=false;overLayFlag=false;" :class="{'md-overlay':overLayFlag}"></div>
+
                     <!-- 商品展示区 start -->
                     <div class="accessory-list-wrap">
                         <div class="accessory-list col-4">
@@ -69,7 +70,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- 提醒登录模态框 start -->
         <modal :modal-show="modalShow" @close="closeModal">
             <p slot="message">请先登录，否则无法添加到购物车中！</p>
@@ -78,7 +79,7 @@
             </div>
         </modal>
         <!-- 提醒登录模态框 end -->
-    
+
         <!-- 加入购物车成功模态框 start -->
         <modal :modal-show="modalShowCart" @close="closeModal">
             <p slot="message">
@@ -94,7 +95,7 @@
             </div>
         </modal>
         <!-- 加入购物车成功模态框 end -->
-    
+
         <!-- 页脚 -->
         <nav-footer></nav-footer>
     </div>
