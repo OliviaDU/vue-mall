@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="main">
                                         <div class="name">{{goods.productName}}</div>
-                                        <div class="price">{{goods.salePrice}}</div>
+                                        <div class="price">¥{{goods.salePrice}}</div>
                                         <div class="btn-area">
                                             <a href="javascript:;" class="btn btn--m" @click="addCart(goods.productId)">加入购物车</a>
                                         </div>
@@ -63,7 +63,7 @@
                             </ul>
                         </div>
                         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30" class="load-more">
-                            <img src="../assets/loading-spinning-bubbles.svg" v-show="loading">
+                            <img src="../../static/loading-svg/loading-spinning-bubbles.svg" v-show="loading">
                         </div>
                     </div>
                     <!-- 商品展示区 end -->
