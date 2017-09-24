@@ -22,13 +22,13 @@ db.on('disconnected', () => {
 
 //为商品展示添加路由
 router.get('/list', (req, res, next) => {
-    let page = Number(req.query.page),//当前所在页数
-        pageSize = Number(req.query.pageSize),//每页的条数
-        priceLevel = req.query.priceLevel,//价格区间的index
-        sort = Number(req.query.sort),//排序方式
-        skip = Number((page - 1) * pageSize);//查询数据时，跳过前面页数的数据
+    let page = Number(req.query.page), //当前所在页数
+        pageSize = Number(req.query.pageSize), //每页的条数
+        priceLevel = req.query.priceLevel, //价格区间的index
+        sort = Number(req.query.sort), //排序方式
+        skip = Number((page - 1) * pageSize); //查询数据时，跳过前面页数的数据
 
-    let params = {};//条件查询传递的参数
+    let params = {}; //条件查询传递的参数
 
     //判断所选的价格区间
     let priceGt = '',
@@ -37,19 +37,19 @@ router.get('/list', (req, res, next) => {
         switch (priceLevel) {
             case '0':
                 priceGt = 0;
-                priceLw = 100;
+                priceLw = 60;
                 break;
             case '1':
-                priceGt = 100;
-                priceLw = 500;
+                priceGt = 60;
+                priceLw = 100;
                 break;
             case '2':
-                priceGt = 500;
-                priceLw = 1000;
+                priceGt = 100;
+                priceLw = 300;
                 break;
             case '3':
-                priceGt = 1000;
-                priceLw = 5000;
+                priceGt = 300;
+                priceLw = 800;
                 break;
         }
         params = {
@@ -91,9 +91,9 @@ router.get('/list', (req, res, next) => {
 //为购物车添加路由，直接写二级路由，不要加/goods
 router.post('/addCart', (req, res, next) => {
     let userId = '100000077',
-        productId = req.body.productId;//通过productId去数据库中查询数据，而不用直接全部从前端获取，不安全
+        productId = req.body.productId; //通过productId去数据库中查询数据，而不用直接全部从前端获取，不安全
 
-    let user;//用户信息
+    let user; //用户信息
     User.findOne({ userId: userId })
         .then((userDoc) => {
             user = userDoc;
@@ -131,7 +131,7 @@ router.post('/addCart', (req, res, next) => {
         })
         .catch((err) => {
             res.json({
-                status: '1',//1为发生错误
+                status: '1', //1为发生错误
                 msg: err.message
             });
         });

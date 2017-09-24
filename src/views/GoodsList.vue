@@ -49,7 +49,7 @@
                                 <li v-for="goods in goodsList" :key="goods.productId">
                                     <div class="pic">
                                         <a href="#">
-                                            <img v-lazy="'/static/'+goods.productImage" alt="">
+                                            <img v-lazy="goods.productUrl" alt="goods.productName">
                                         </a>
                                     </div>
                                     <div class="main">
@@ -131,19 +131,19 @@ export default {
             priceFilter: [
                 {
                     startPrice: '0',
+                    endPrice: '60'
+                },
+                {
+                    startPrice: '60',
                     endPrice: '100'
                 },
                 {
                     startPrice: '100',
-                    endPrice: '500'
+                    endPrice: '300'
                 },
                 {
-                    startPrice: '500',
-                    endPrice: '1000'
-                },
-                {
-                    startPrice: '1000',
-                    endPrice: '1500'
+                    startPrice: '300',
+                    endPrice: '800'
                 }
             ]
         }
