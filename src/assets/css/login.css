@@ -145,16 +145,17 @@ a {
     display: block;
     height: 38px;
     line-height: 38px;
-    border: 2px solid #009de6;
-    background: #009de6;
+    border: 2px solid #d45151;
+    background: #d45151;
     color: #fff;
     font-size: 18px;
     text-align: center;
+    transition: all .2s ease-out;
 }
 
 .btn-login:hover {
-    background: #61b1ef;
-    border: 2px solid #61b1ef;
+    background: #f16868;
+    border: 2px solid #f16868;
 }
 
 .error-wrap .error {
