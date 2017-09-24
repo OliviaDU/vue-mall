@@ -909,72 +909,9 @@ html {
 
 .footer {
     background-color: #f5f7fc;
-    color: #333;
-    position: relative;
-}
-
-.footer__wrap {
-    max-width: 1280px;
-    margin: 0 auto;
-}
-
-.footer__primary .footer__inner {
-    height: 104px;
-}
-
-.footer__secondary {
-    border-top: 1px solid rgba(51, 51, 51, 0.15);
-}
-
-.footer__secondary .footer__inner {
-    height: 100px;
-}
-
-.footer__inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    position: relative;
-}
-
-.footer__region {
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    left: 36px;
-}
-
-.footer__region span {
-    color: #ada9a5;
-}
-
-.footer__secondary__nav {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 670px;
-    -webkit-transform: translate(-50%);
-    -ms-transform: translate(-50%);
-    transform: translate(-50%);
-}
-
-.footer__secondary__nav a,
-.footer__secondary__nav span {
-    color: #ada9a5;
-    margin-left: 3.3125em;
-}
-
-.footer__secondary__nav a:first-child,
-.footer__secondary__nav span:first-child {
-    margin-left: 0;
-}
-
-.footer__region__flag {
-    display: inline-block;
-    position: relative;
-    top: 7px;
-    width: 38px;
+    color: #666;
+    text-align: center;
+    padding: 30px 0;
 }
 
 @media screen and (max-width: 1440px) {
