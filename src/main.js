@@ -15,7 +15,7 @@ import './assets/css/product.css'
 
 Vue.use(Vuex);
 Vue.use(VueLazyLoad, {
-  loading: '/static/loading-svg/loading-bars.svg'
+    loading: '/static/loading-svg/loading-bars.svg'
 });
 Vue.use(infiniteScroll);
 Vue.filter('currency', currency);
@@ -23,28 +23,24 @@ Vue.filter('currency', currency);
 Vue.config.productionTip = false
 
 const store = new Vuex.Store({
-  state: {
-    nickName: '',
-    cartCount: 0
-  },
-  mutations: {
-    updateUserInfo(state, nickName) {
-      state.nickName = nickName;
+    state: {
+        cartCount: 0
     },
-    updateCartCount(state, cartCount) {
-      state.cartCount += cartCount;
-    },
-    initCartCount(state, cartCount) {
-      state.cartCount = cartCount;
+    mutations: {
+        updateCartCount(state, cartCount) {
+            state.cartCount += cartCount;
+        },
+        initCartCount(state, cartCount) {
+            state.cartCount = cartCount;
+        }
     }
-  }
 });
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  store,
-  router,
-  template: '<App/>',
-  components: { App }
+    el: '#app',
+    store,
+    router,
+    template: '<App/>',
+    components: { App }
 })

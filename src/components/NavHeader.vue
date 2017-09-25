@@ -95,14 +95,13 @@ export default {
             userPwd: '',
             errorTip: false,
             emptyTip: false,
-            loginModalFlag: false
+            loginModalFlag: false,
+            nickName:''
         }
     },
     computed: {
-        ...mapState(['nickName', 'cartCount'])
-        /* nickName() {
-            return this.$store.state.nickName;
-        },
+        ...mapState(['cartCount'])
+        /*
         cartCount() {
             return this.$store.state.cartCount;
         } */
@@ -115,8 +114,7 @@ export default {
             axios.get('/users/checkLogin').then((res) => {
                 let data = res.data;
                 if (data.status === '0') {
-                    //this.nickName = data.result.userName;
-                    this.$store.commit('updateUserInfo', data.result.userName);
+                    this.nickName = data.result.userName;
                     this.getCartCount();
                 }
             })
@@ -139,8 +137,7 @@ export default {
                     if (data.status === '0') {
                         this.errorTip = false;
                         this.loginModalFlag = false;
-                        // this.nickName = res.data.result.userName;
-                        this.$store.commit('updateUserInfo', data.result.userName);
+                        this.nickName = res.data.result.userName;
                         this.getCartCount();
                     } else {
                         this.errorTip = true;
@@ -154,8 +151,7 @@ export default {
             axios.post('/users/logout').then((res) => {
                 let data = res.data;
                 if (data.status === '0') {
-                    //this.nickName = '';
-                    this.$store.commit('updateUserInfo', '');
+                    this.nickName = '';
                 }
             })
         },
