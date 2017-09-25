@@ -63,7 +63,7 @@
                   </div>
                   <!-- 商品图片 -->
                   <div class="cart-item-pic">
-                    <img :src="'/static/'+item.productImage" :alt="item.productName">
+                    <img :src="item.productUrl" :alt="item.productName">
                   </div>
                   <!-- 商品名称 -->
                   <div class="cart-item-title">
@@ -100,7 +100,7 @@
                     </a>
                   </div>
                 </div>
-  
+
               </li>
             </ul>
           </div>
@@ -120,7 +120,7 @@
                 </a>
               </div>
             </div>
-  
+
             <!-- 所有商品合计价格   -->
             <div class="cart-foot-r">
               <div class="item-total">
@@ -131,12 +131,12 @@
                 <a class="btn btn--red" :class="{'btn--dis':checkedCount===0}" @click="checkOut">&nbsp;&nbsp;结&nbsp;&nbsp;算&nbsp;&nbsp;</a>
               </div>
             </div>
-  
+
           </div>
         </div>
       </div>
     </div>
-  
+
     <!-- 删除商品弹出框 start -->
     <Modal @close="closeModal" :modalShow="delCartModal">
       <p slot="message">你确定要删除这个商品吗?</p>
@@ -146,7 +146,7 @@
       </div>
     </Modal>
     <!-- 删除商品弹出框 end -->
-  
+
     <nav-footer></nav-footer>
   </div>
 </template>
